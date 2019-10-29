@@ -17,40 +17,22 @@ def get_args():
 def main():
 	args = get_args()
 
-	if args.domain.split('.')[2]:
-		sub = args.domain.split('.')[0]
-		domain = args.domain.split('.')[1]
-		tld = args.domain.split('.')[2]
-	else:
-		domain = args.domain.split('.')[0]
-		tld = args.domain.split('.')[1]
+	# 0xZDH Magic Right here...
+	dcstring = ','.join(['dc=%s' % i for i in args.domain.split('.')])
 
-	# Create LDAP Connection
 	server = Server(args.target, get_info=ALL)
 	conn = Connection(server, user="%s\\%s" % (args.domain, args.username), password="%s" % args.password, authentication="NTLM", auto_bind=True)
 
-	# Search for Exchange Servers
-	if sub:
-		conn.search('cn=Configuration,dc=%s,dc=%s,dc=%s' % (sub,domain,tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
 
-		print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
+	conn.search('cn=Configuration,%s' % dcstring,'(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
 
-		for entry in conn.response:
-			try:
-				print(Fore.GREEN+Style.BRIGHT+entry['attributes']['adminDisplayName']+".%s.%s.%s" % (sub,domain,tld) +Style.RESET_ALL)
-			except Exception as e:
-				continue
-	else:
-		conn.search('cn=Configuration,dc=%s,dc=%s' % (domain, tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
+	print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
 
-		print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
-
-		for entry in conn.response:
-			try:
-				print(Fore.GREEN+Style.BRIGHT+entry['attributes']['adminDisplayName']+".%s.%s" % (domain,tld)+Style.RESET_ALL)
-			except Exception as e:
-				continue
+	for entry in conn.response:
+		try:
+			print(Fore.GREEN+"%s.%s" % (entry['attributes']['adminDisplayName'],args.domain) + Style.RESET_ALL)
+		except Exception as e:
+			continue
 
 if __name__ == "__main__":
 	main()
-

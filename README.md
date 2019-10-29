@@ -7,7 +7,6 @@ This script uses a valid credential, a DC IP and Hostname to log into the DC ove
 ```
 ./exchange_hunter2.py -h
 usage: exchange_hunter2.py [-h] -u USERNAME -p PASSWORD -d DOMAIN -t TARGET
-                           -hn HOSTNAME
 
 Exchange Hunter via LDAP
 
@@ -18,15 +17,13 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         password
   -d DOMAIN, --domain DOMAIN
-                        domain
+                        domain.com
   -t TARGET, --target TARGET
-                        Target Domain Controller IP Address
-  -hn HOSTNAME, --hostname HOSTNAME
-                        Target Domain Contoller Hostname
+                        Target Domain Controller
 ```
 # Example Usage:
 ```
-./exchange_hunter2.py -u testuser1 -p Summer2019 -d tgore -t 192.168.204.139 -hn WIN-T35SCEHFETF.tgore.com
+./exchange_hunter2.py -u testuser1 -p Summer2019 -d tgore.com -t 192.168.204.139
 u:TGORE\testuser1
 [+] Exchange Servers Found:
 EXCHANGE.tgore.com

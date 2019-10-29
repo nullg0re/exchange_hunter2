@@ -17,8 +17,9 @@ def get_args():
 def main():
 	args = get_args()
 
-	domain = args.domain.split('.')[0]
-	tld = args.domain.split('.')[1]
+	sub = args.domain.split('.')[0]
+	domain = args.domain.split('.')[1]
+	tld = args.domain.split('.')[-1]
 
 	# Create LDAP Connection
 	server = Server(args.target, get_info=ALL)

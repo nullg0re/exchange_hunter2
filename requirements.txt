@@ -1,0 +1,4 @@
+argparse
+ldap3
+colorama
+json

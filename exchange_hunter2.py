@@ -29,21 +29,28 @@ def main():
 	server = Server(args.target, get_info=ALL)
 	conn = Connection(server, user="%s\\%s" % (args.domain, args.username), password="%s" % args.password, authentication="NTLM", auto_bind=True)
 
-	print(Fore.YELLOW+conn.extend.standard.who_am_i()+Style.RESET_ALL)
-
 	# Search for Exchange Servers
 	if sub:
 		conn.search('cn=Configuration,dc=%s,dc=%s,dc=%s' % (sub,domain,tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
+
+		print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
+
+		for entry in conn.response:
+			try:
+				print(Fore.GREEN+Style.BRIGHT+entry['attributes']['adminDisplayName']+".%s.%s.%s" % (sub,domain,tld) +Style.RESET_ALL)
+			except Exception as e:
+				continue
 	else:
 		conn.search('cn=Configuration,dc=%s,dc=%s' % (domain, tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
 
-	print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
+		print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
 
-	for entry in conn.response:
-		try:
-			print(Fore.GREEN+Style.BRIGHT+entry['attributes']['adminDisplayName']+".%s.%s" % (domain,tld)+Style.RESET_ALL)
-		except Exception as e:
-			continue
+		for entry in conn.response:
+			try:
+				print(Fore.GREEN+Style.BRIGHT+entry['attributes']['adminDisplayName']+".%s.%s" % (domain,tld)+Style.RESET_ALL)
+			except Exception as e:
+				continue
 
 if __name__ == "__main__":
 	main()
+

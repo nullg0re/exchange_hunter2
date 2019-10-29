@@ -2,15 +2,13 @@
 import argparse
 from ldap3 import Server, Connection, ALL
 from colorama import Fore, Style
-import json
 
 def get_args():
 	p = argparse.ArgumentParser(description="Exchange Hunter via LDAP")
 	p.add_argument('-u','--username',type=str,help='username',required=True)
 	p.add_argument('-p','--password',type=str,help='password',required=True)
-	p.add_argument('-d','--domain',type=str,help='domain',required=True)
-	p.add_argument('-t','--target',type=str,help='Target Domain Controller IP Address',required=True)
-	p.add_argument('-hn','--hostname',type=str,help="Target Domain Contoller Hostname",required=True)
+	p.add_argument('-d','--domain',type=str,help='domain.com',required=True)
+	p.add_argument('-t','--target',type=str,help='Target Domain Controller',required=True)
 
 	args = p.parse_args()
 
@@ -19,15 +17,8 @@ def get_args():
 def main():
 	args = get_args()
 
-	# Breakdown DC Hostname for LDAP Connection
-	sub = args.hostname.split('.')[0]
-	domain = args.hostname.split('.')[1]
-	tld = args.hostname.split('.')[-1]
-
-	# Confirm Hostname is FQDN
-	if tld not in ['com','org','gov','edu','mil','net']:
-		print(Fore.YELLOW+"[*] Top Level Domain is %s, Either adjust script, or adjust target to be FQDN instead of IP." % tld +Style.RESET_ALL)
-		print(Fore.RED+"[!] Exiting Now!"+Style.RESET_ALL)
+	domain = args.domain.split('.')[0]
+	tld = args.domain.split('.')[1]
 
 	# Create LDAP Connection
 	server = Server(args.target, get_info=ALL)

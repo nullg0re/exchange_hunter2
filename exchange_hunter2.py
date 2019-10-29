@@ -17,9 +17,13 @@ def get_args():
 def main():
 	args = get_args()
 
-	sub = args.domain.split('.')[0]
-	domain = args.domain.split('.')[1]
-	tld = args.domain.split('.')[-1]
+	if args.domain.split('.')[2]:
+		sub = args.domain.split('.')[0]
+		domain = args.domain.split('.')[1]
+		tld = args.domain.split('.')[2]
+	else:
+		domain = args.domain.split('.')[0]
+		tld = args.domain.split('.')[1]
 
 	# Create LDAP Connection
 	server = Server(args.target, get_info=ALL)
@@ -28,7 +32,10 @@ def main():
 	print(Fore.YELLOW+conn.extend.standard.who_am_i()+Style.RESET_ALL)
 
 	# Search for Exchange Servers
-	conn.search('cn=Configuration,dc=%s,dc=%s' % (domain, tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
+	if sub:
+		conn.search('cn=Configuration,dc=%s,dc=%s,dc=%s' % (sub,domain,tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
+	else:
+		conn.search('cn=Configuration,dc=%s,dc=%s' % (domain, tld), '(objectCategory=msExchExchangeServer)', attributes = ['adminDisplayName'])
 
 	print(Fore.GREEN+Style.BRIGHT+"[+] Exchange Servers Found:"+Style.RESET_ALL)
 

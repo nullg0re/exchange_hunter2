@@ -23,8 +23,7 @@ optional arguments:
 ```
 # Example Usage:
 ```
-./exchange_hunter2.py -u testuser1 -p Summer2019 -d tgore.com -t 192.168.204.139
-u:TGORE\testuser1
+./exchange_hunter2.py -u testuser1 -p Summer2019 -d tgore.com -t 192.168.204.132
 [+] Exchange Servers Found:
 EXCHANGE.tgore.com
 ```
